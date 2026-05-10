@@ -1,0 +1,286 @@
+// =============================================================================
+// Traveloop — Prisma Schema
+// datasource : MySQL
+// generator  : Prisma Client JS
+// Conventions:
+//   - BigInt  @id @default(autoincrement()) on every model.
+//   - createdAt / updatedAt on every model via @default(now()) / @updatedAt.
+//   - Cascade and SetNull rules mirror the MySQL DDL exactly.
+//   - Every relation is bidirectional and uniquely named.
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum ActivityType {
+  sightseeing
+  food
+  adventure
+  wellness
+  shopping
+}
+
+enum BudgetCategory {
+  Transport
+  Stay
+  Meal
+  Activity
+  Miscellaneous
+}
+
+enum PackingCategory {
+  Clothing
+  Documents
+  Electronics
+  Toiletries
+  Miscellaneous
+}
+
+enum MemberRole {
+  owner
+  collaborator
+  viewer
+}
+
+// ---------------------------------------------------------------------------
+// Model: User
+// ---------------------------------------------------------------------------
+
+model User {
+  id                 BigInt   @id @default(autoincrement())
+  name               String   @db.VarChar(255)
+  email              String   @unique @db.VarChar(255)
+  hashedPassword     String   @map("hashed_password") @db.VarChar(255)
+  photoUrl           String?  @map("photo_url") @db.VarChar(2048)
+  languagePreference String   @map("language_preference") @default("en") @db.VarChar(10)
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  trips       Trip[]       @relation("UserTrips")
+  tripMembers TripMember[] @relation("UserTripMembers")
+
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------------
+// Model: City  (global seed table)
+// ---------------------------------------------------------------------------
+
+model City {
+  id              BigInt   @id @default(autoincrement())
+  name            String   @db.VarChar(255)
+  country         String   @db.VarChar(255)
+  countryCode     String   @map("country_code") @db.Char(3)
+  costIndex       Decimal  @map("cost_index") @default(0.00) @db.Decimal(6, 2)
+  popularityScore Decimal  @map("popularity_score") @default(0.00) @db.Decimal(5, 2)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  stops Stop[] @relation("CityStops")
+
+  @@map("cities")
+}
+
+// ---------------------------------------------------------------------------
+// Model: Activity  (global seed table)
+// ---------------------------------------------------------------------------
+
+model Activity {
+  id              BigInt       @id @default(autoincrement())
+  name            String       @db.VarChar(255)
+  type            ActivityType
+  estimatedCost   Decimal      @map("estimated_cost") @default(0.00) @db.Decimal(10, 2)
+  durationMinutes Int          @map("duration_minutes") @default(0)
+  description     String?      @db.Text
+  imageUrl        String?      @map("image_url") @db.VarChar(2048)
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  stopActivities StopActivity[] @relation("ActivityStopActivities")
+
+  @@map("activities")
+}
+
+// ---------------------------------------------------------------------------
+// Model: Trip
+// ---------------------------------------------------------------------------
+
+model Trip {
+  id            BigInt    @id @default(autoincrement())
+  ownerId       BigInt    @map("owner_id")
+  name          String    @db.VarChar(255)
+  description   String?   @db.Text
+  startDate     DateTime? @map("start_date") @db.Date
+  endDate       DateTime? @map("end_date") @db.Date
+  coverPhotoUrl String?   @map("cover_photo_url") @db.VarChar(2048)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  owner       User          @relation("UserTrips", fields: [ownerId], references: [id], onDelete: Cascade)
+  stops       Stop[]        @relation("TripStops")
+  budgetItems BudgetItem[]  @relation("TripBudgetItems")
+  packingList PackingList[] @relation("TripPackingList")
+  tripNotes   TripNote[]    @relation("TripNotes")
+  sharedLinks SharedLink[]  @relation("TripSharedLinks")
+  tripMembers TripMember[]  @relation("TripMembers")
+
+  @@map("trips")
+}
+
+// ---------------------------------------------------------------------------
+// Model: Stop
+// ---------------------------------------------------------------------------
+
+model Stop {
+  id            BigInt    @id @default(autoincrement())
+  tripId        BigInt    @map("trip_id")
+  cityId        BigInt    @map("city_id")
+  arrivalDate   DateTime? @map("arrival_date") @db.Date
+  departureDate DateTime? @map("departure_date") @db.Date
+  orderIndex    Int       @map("order_index") @default(0)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  trip           Trip           @relation("TripStops", fields: [tripId], references: [id], onDelete: Cascade)
+  city           City           @relation("CityStops", fields: [cityId], references: [id], onDelete: Cascade)
+  stopActivities StopActivity[] @relation("StopStopActivities")
+  tripNotes      TripNote[]     @relation("StopNotes")
+
+  // Composite unique: enforces itinerary sequence, supports reordering.
+  @@unique([tripId, orderIndex], name: "uq_stops_trip_order")
+  @@map("stops")
+}
+
+// ---------------------------------------------------------------------------
+// Model: StopActivity  (many-to-many join: stops ↔ activities)
+// ---------------------------------------------------------------------------
+
+model StopActivity {
+  id         BigInt   @id @default(autoincrement())
+  stopId     BigInt   @map("stop_id")
+  activityId BigInt   @map("activity_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  stop     Stop     @relation("StopStopActivities", fields: [stopId], references: [id], onDelete: Cascade)
+  activity Activity @relation("ActivityStopActivities", fields: [activityId], references: [id], onDelete: Cascade)
+
+  // Composite unique: prevents the same activity being added twice to one stop.
+  @@unique([stopId, activityId], name: "uq_stop_activities_stop_activity")
+  @@map("stop_activities")
+}
+
+// ---------------------------------------------------------------------------
+// Model: BudgetItem
+// ---------------------------------------------------------------------------
+
+model BudgetItem {
+  id          BigInt         @id @default(autoincrement())
+  tripId      BigInt         @map("trip_id")
+  category    BudgetCategory
+  description String?        @db.VarChar(500)
+  amount      Decimal        @default(0.00) @db.Decimal(12, 2)
+  date        DateTime?      @db.Date
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  // Relations
+  trip Trip @relation("TripBudgetItems", fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@map("budget_items")
+}
+
+// ---------------------------------------------------------------------------
+// Model: PackingList
+// ---------------------------------------------------------------------------
+
+model PackingList {
+  id        BigInt          @id @default(autoincrement())
+  tripId    BigInt          @map("trip_id")
+  itemName  String          @map("item_name") @db.VarChar(255)
+  category  PackingCategory
+  isPacked  Boolean         @map("is_packed") @default(false)
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
+
+  // Relations
+  trip Trip @relation("TripPackingList", fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@map("packing_lists")
+}
+
+// ---------------------------------------------------------------------------
+// Model: TripNote
+// ---------------------------------------------------------------------------
+
+model TripNote {
+  id        BigInt   @id @default(autoincrement())
+  tripId    BigInt   @map("trip_id")
+  stopId    BigInt?  @map("stop_id")           // nullable — note can be trip-global
+  title     String?  @db.VarChar(255)
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  trip Trip  @relation("TripNotes", fields: [tripId], references: [id], onDelete: Cascade)
+  // Nullable FK → SET NULL: note survives stop deletion, stop_id becomes null.
+  stop Stop? @relation("StopNotes", fields: [stopId], references: [id], onDelete: SetNull)
+
+  @@map("trip_notes")
+}
+
+// ---------------------------------------------------------------------------
+// Model: SharedLink
+// ---------------------------------------------------------------------------
+
+model SharedLink {
+  id        BigInt    @id @default(autoincrement())
+  tripId    BigInt    @map("trip_id")
+  token     String    @unique @db.VarChar(128)   // public URL identifier
+  expiresAt DateTime? @map("expires_at")         // null = never expires
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  trip Trip @relation("TripSharedLinks", fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@map("shared_links")
+}
+
+// ---------------------------------------------------------------------------
+// Model: TripMember
+// ---------------------------------------------------------------------------
+
+model TripMember {
+  id        BigInt     @id @default(autoincrement())
+  tripId    BigInt     @map("trip_id")
+  userId    BigInt     @map("user_id")
+  role      MemberRole @default(viewer)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  trip Trip @relation("TripMembers", fields: [tripId], references: [id], onDelete: Cascade)
+  user User @relation("UserTripMembers", fields: [userId], references: [id], onDelete: Cascade)
+
+  // Composite unique: one membership row per user per trip.
+  @@unique([tripId, userId], name: "uq_trip_members_trip_user")
+  @@map("trip_members")
+}
