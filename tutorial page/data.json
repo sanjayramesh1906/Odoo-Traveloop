@@ -1,0 +1,9 @@
+{
+  "brandName": "Traveloop",
+  "buttonText": "Begin Your Journey",
+  "shapes": [
+    "shape-square",
+    "shape-circle",
+    "shape-diamond"
+  ]
+}

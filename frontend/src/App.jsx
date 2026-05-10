@@ -1,36 +1,17 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import WelcomePage from './pages/WelcomePage';
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import NotFoundPage from './pages/NotFoundPage';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import MyTrips from './pages/MyTrips';
 
-export default function App() {
+function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* Public */}
-          <Route path="/" element={<WelcomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          {/* /signup redirects to /login?tab=signup */}
-          <Route path="/signup" element={<Navigate to="/login?tab=signup" replace />} />
-
-          {/* Protected */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardPage />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* 404 */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+    <Router>
+      <Routes>
+        <Route path="/my-trips" element={<MyTrips />} />
+        {/* Redirect root to my-trips for now */}
+        <Route path="/" element={<Navigate to="/my-trips" replace />} />
+      </Routes>
+    </Router>
   );
 }
+
+export default App;
