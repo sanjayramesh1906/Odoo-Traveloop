@@ -1,0 +1,17 @@
+{
+  "Essentials": [
+    { "id": "e1", "text": "Passport & Visa", "packed": true },
+    { "id": "e2", "text": "Travel Insurance", "packed": true },
+    { "id": "e3", "text": "Wallet & Currency", "packed": false },
+    { "id": "e4", "text": "Medication & Prescriptions", "packed": false },
+    { "id": "e5", "text": "Power Bank & Charger", "packed": false }
+  ],
+  "Clothing": [
+    { "id": "c1", "text": "T-shirts & Tops", "packed": true },
+    { "id": "c2", "text": "Pants & Shorts", "packed": false },
+    { "id": "c3", "text": "Underwear & Socks", "packed": true },
+    { "id": "c4", "text": "Swimwear", "packed": false },
+    { "id": "c5", "text": "Light Jacket", "packed": false },
+    { "id": "c6", "text": "Comfortable Shoes", "packed": true }
+  ]
+}
