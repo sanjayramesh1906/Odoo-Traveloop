@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS trips (
   description      TEXT                NULL,
   start_date       DATE                NULL,
   end_date         DATE                NULL,
+  budget           DECIMAL(12, 2)  NOT NULL DEFAULT 0.00,
   cover_photo_url  VARCHAR(2048)       NULL,
   created_at       TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at       TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

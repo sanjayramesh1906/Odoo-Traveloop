@@ -1,37 +1,4 @@
-/* Dashboard.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
-
-:root {
-  --primary: #5e5ce6;
-  --primary-hover: #4b49b6;
-  --secondary: #f0f0f5;
-  --bg-color: #fafafa;
-  --sidebar-bg: #ffffff;
-  --text-main: #1d1d1f;
-  --text-muted: #86868b;
-  --border-color: #e5e5ea;
-  --card-bg: #ffffff;
-  --success: #34c759;
-  --warning: #ffcc00;
-  --danger: #ff3b30;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: 'Playfair Display', serif;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: var(--font-sans);
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  -webkit-font-smoothing: antialiased;
-}
+/* Dashboard.css — uses unified tokens from index.css */
 
 .traveloop-layout {
   display: flex;
@@ -297,6 +264,49 @@ body {
 
 .page-header {
   margin-bottom: 32px;
+}
+
+.page-title.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.brand h2 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  color: var(--primary);
+}
+
+.tl-logo-mini {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tl-logo-mini span {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.tl-logo-mini .shape-square {
+  background: linear-gradient(145deg, #4cd964, #2aa84e);
+  border-radius: 3px;
+}
+
+.tl-logo-mini .shape-circle {
+  background: linear-gradient(145deg, #ff6b6b, #e03030);
+  border-radius: 50%;
+}
+
+.tl-logo-mini .shape-diamond {
+  background: linear-gradient(145deg, #f7d060, #e6a800);
+  transform: rotate(45deg);
+  border-radius: 2px;
+  width: 12px;
+  height: 12px;
 }
 
 .page-title {

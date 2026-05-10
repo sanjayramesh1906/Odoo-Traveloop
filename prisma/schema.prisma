@@ -125,6 +125,7 @@ model Trip {
   description   String?   @db.Text
   startDate     DateTime? @map("start_date") @db.Date
   endDate       DateTime? @map("end_date") @db.Date
+  budget        Decimal   @default(0.00) @db.Decimal(12, 2)
   coverPhotoUrl String?   @map("cover_photo_url") @db.VarChar(2048)
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")

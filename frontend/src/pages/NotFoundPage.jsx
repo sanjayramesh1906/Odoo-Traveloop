@@ -15,7 +15,7 @@ export default function NotFoundPage() {
       fontFamily: 'Inter, sans-serif',
     }}>
       <h1 style={{ fontSize: '4rem', fontWeight: 300, margin: 0 }}>404</h1>
-      <p style={{ color: 'var(--color-text-muted)' }}>Page not found.</p>
+      <p style={{ color: 'var(--text-muted)' }}>Page not found.</p>
       <button
         onClick={() => navigate('/')}
         style={{

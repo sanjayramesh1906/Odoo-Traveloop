@@ -1,5 +1,5 @@
 /* =========================================================
-   WelcomePage.css
+   WelcomePage.css — uses unified tokens from index.css
    ========================================================= */
 
 .welcome-root {
@@ -7,8 +7,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-bg);
-  animation: fade-in 0.6s ease both;
+  background: var(--bg-color);
+  animation: fadeIn 0.6s ease both;
 }
 
 .welcome-card {
@@ -16,7 +16,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0;
-  animation: slide-up 0.7s ease both;
+  animation: slideUp 0.7s ease both;
 }
 
 /* ── Logo shapes ── */
@@ -55,22 +55,23 @@
   transform: rotate(45deg);
   border-radius: 10px;
   box-shadow: 0 6px 20px rgba(247, 208, 96, 0.35);
-  animation: float 3s ease-in-out infinite 0.8s;
+  animation: float-diamond 3s ease-in-out infinite 0.8s;
 }
 
 /* ── Wordmark ── */
 .wordmark {
+  font-family: var(--font-serif);
   font-size: 3.5rem;
   font-weight: 300;
   letter-spacing: -1px;
-  color: var(--color-text);
+  color: var(--text-main);
   margin: 0 0 6px;
   line-height: 1;
 }
 
 .tagline {
   font-size: 0.95rem;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   margin: 0 0 36px;
   letter-spacing: 0.02em;
 }
@@ -78,23 +79,23 @@
 /* ── Outlined button ── */
 .btn-outline {
   padding: 14px 42px;
-  border: 1.5px solid var(--color-text);
-  border-radius: 50px;
+  border: 1.5px solid var(--primary);
+  border-radius: var(--radius-pill);
   background: transparent;
-  color: var(--color-text);
+  color: var(--primary);
   font-size: 1rem;
   font-family: inherit;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   letter-spacing: 0.02em;
-  transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+  transition: all 0.2s;
 }
 
 .btn-outline:hover {
-  background: var(--color-text);
+  background: var(--primary);
   color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  box-shadow: var(--shadow-lg);
 }
 
 .btn-outline:active {
@@ -107,22 +108,7 @@
   50% { transform: translateY(-8px); }
 }
 
-/* diamond overrides the float to keep the rotation */
-.shape-diamond {
-  animation: float-diamond 3s ease-in-out infinite 0.8s;
-}
-
 @keyframes float-diamond {
   0%, 100% { transform: rotate(45deg) translateY(0); }
   50% { transform: rotate(45deg) translateY(-8px); }
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slide-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
 }

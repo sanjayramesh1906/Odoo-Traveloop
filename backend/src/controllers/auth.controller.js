@@ -1,9 +1,7 @@
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../config/prisma');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const { signToken } = require('../utils/jwt');
-
-const prisma = new PrismaClient();
 
 /**
  * POST /api/auth/signup
@@ -43,6 +41,8 @@ async function signup(req, res) {
     });
   } catch (err) {
     console.error('[signup]', err);
+    const fs = require('fs');
+    fs.appendFileSync('error.log', `[${new Date().toISOString()}] Signup Error: ${err.stack}\n`);
     return res.status(500).json({ message: 'Server error. Please try again.' });
   }
 }
@@ -87,6 +87,8 @@ async function login(req, res) {
     });
   } catch (err) {
     console.error('[login]', err);
+    const fs = require('fs');
+    fs.appendFileSync('error.log', `[${new Date().toISOString()}] Login Error: ${err.stack}\n`);
     return res.status(500).json({ message: 'Server error. Please try again.' });
   }
 }
