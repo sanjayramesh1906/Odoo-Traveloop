@@ -5,6 +5,11 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth.routes');
 const tripRoutes = require('./routes/trip.routes');
 const itineraryRoutes = require('./routes/itinerary.routes');
+const publicRoutes = require('./routes/public.routes');
+const adminRoutes = require('./routes/admin.routes');
+const notesRoutes = require('./routes/notes.routes');
+const userRoutes = require('./routes/user.routes');
+const packingRoutes = require('./routes/packing.routes');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -35,8 +40,15 @@ app.get('/api/health', (_req, res) => {
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/auth', authRoutes);
+app.use('/api/public', publicRoutes); // Public routes (no auth)
+app.use('/api/admin', adminRoutes); // Admin routes
 app.use('/api/trips', tripRoutes);
+app.use('/api/trips/:tripId/notes', notesRoutes);
+app.use('/api/notes', notesRoutes);
+app.use('/api/trips/:tripId/packing', packingRoutes);
+app.use('/api/packing', packingRoutes);
 app.use('/api/itinerary', itineraryRoutes);
+app.use('/api/users', userRoutes);
 
 // ─── 404 handler ──────────────────────────────────────────────────────────────
 app.use((_req, res) => {

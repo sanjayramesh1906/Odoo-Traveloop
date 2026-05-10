@@ -6,7 +6,13 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import ItineraryPage from './pages/ItineraryPage';
 import MyTrips from './pages/MyTrips';
+import SharedItineraryPage from './pages/SharedItineraryPage';
+import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
+import TripNotes from './pages/TripNotes';
+import ProfilePage from './pages/ProfilePage';
+import BudgetAnalyticsPage from './pages/BudgetAnalyticsPage';
+import PackingChecklistPage from './pages/PackingChecklistPage';
 
 function ItineraryPageWrapper() {
   const { user, logout } = useAuth();
@@ -21,8 +27,8 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           {/* Public */}
-          <Route path="/" element={<WelcomePage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<Navigate to="/" replace />} />
           {/* /signup redirects to /login?tab=signup */}
           <Route path="/signup" element={<Navigate to="/login?tab=signup" replace />} />
 
@@ -51,7 +57,48 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/trips/:tripId/budget"
+            element={
+              <ProtectedRoute>
+                <BudgetAnalyticsPage />
+              </ProtectedRoute>
+            }
+          />
 
+          <Route path="/share/:token" element={<SharedItineraryPage />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notes"
+            element={
+              <ProtectedRoute>
+                <TripNotes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/packing"
+            element={
+              <ProtectedRoute>
+                <PackingChecklistPage />
+              </ProtectedRoute>
+            }
+          />
           {/* 404 */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

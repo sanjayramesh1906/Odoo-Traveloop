@@ -1,0 +1,31 @@
+{
+  "profile": {
+    "firstName": "Elena",
+    "lastName": "Rostova",
+    "email": "elena.nomad@example.com",
+    "bio": "Digital nomad seeking the perfect balance between high-speed Wi-Fi and untouched nature.",
+    "photoUrl": "https://i.pravatar.cc/150?img=47",
+    "stats": {
+      "trips": 12,
+      "followers": 45,
+      "following": 38
+    }
+  },
+  "preferences": {
+    "language": "English (US)",
+    "publicProfile": true,
+    "activityStatus": false
+  },
+  "savedDestinations": [
+    {
+      "id": 1,
+      "name": "Kyoto",
+      "country": "Japan"
+    },
+    {
+      "id": 2,
+      "name": "Zermatt",
+      "country": "Switzerland"
+    }
+  ]
+}

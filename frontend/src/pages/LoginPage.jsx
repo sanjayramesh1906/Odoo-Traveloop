@@ -32,11 +32,6 @@ export default function LoginPage() {
   const [searchParams] = useSearchParams();
   const { login: authLogin, token } = useAuth();
 
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (token) navigate('/dashboard', { replace: true });
-  }, [token, navigate]);
-
   // Tab state — driven by ?tab= query param
   const initialTab = searchParams.get('tab') === 'signup' ? 'signup' : 'login';
   const [tab, setTab] = useState(initialTab);

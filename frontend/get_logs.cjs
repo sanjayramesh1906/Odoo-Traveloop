@@ -1,0 +1,22 @@
+const puppeteer = require('puppeteer');
+
+(async () => {
+  const browser = await puppeteer.launch({ headless: 'new' });
+  const page = await browser.newPage();
+  
+  page.on('console', msg => {
+    console.log(`[BROWSER CONSOLE] ${msg.type().toUpperCase()}: ${msg.text()}`);
+  });
+
+  page.on('pageerror', err => {
+    console.error(`[BROWSER ERROR]: ${err.toString()}`);
+  });
+
+  try {
+    await page.goto('http://localhost:5173/dashboard', { waitUntil: 'networkidle0', timeout: 10000 });
+  } catch (err) {
+    console.log('Timeout or error during navigation');
+  }
+
+  await browser.close();
+})();

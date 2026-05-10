@@ -1,0 +1,79 @@
+/* TutorialPage.css */
+
+.tutorial-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.shapes-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.shape {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+.shape-square {
+  width: 64px;
+  height: 64px;
+  background-color: #4cd964; /* Vibrant Green */
+  border-radius: 12px;
+}
+
+.shape-circle {
+  width: 64px;
+  height: 64px;
+  background-color: #ff5a5f; /* Coral Pink/Red */
+  border-radius: 50%;
+}
+
+.shape-diamond {
+  width: 52px;
+  height: 52px;
+  background-color: #f6c845; /* Soft Yellow */
+  border-radius: 8px;
+  transform: rotate(45deg);
+  margin: 0 12px;
+}
+
+.tutorial-brand {
+  font-size: 42px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0 0 30px 0;
+  letter-spacing: -0.5px;
+}
+
+.begin-btn {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
+  border-radius: 40px;
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.begin-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2);
+}
+
+.begin-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}

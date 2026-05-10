@@ -93,4 +93,29 @@ async function login(req, res) {
   }
 }
 
-module.exports = { signup, login };
+/**
+ * GET /api/auth/me
+ * Returns the current authenticated user. Used by the frontend
+ * to verify whether a stored token is still valid on app startup.
+ */
+async function me(req, res) {
+  try {
+    const userId = BigInt(req.user.sub);
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, name: true, email: true, photoUrl: true }
+    });
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+    return res.json({
+      id: user.id.toString(),
+      name: user.name,
+      email: user.email,
+      photoUrl: user.photoUrl
+    });
+  } catch (err) {
+    console.error('[me]', err);
+    return res.status(500).json({ message: 'Server error.' });
+  }
+}
+
+module.exports = { signup, login, me };
